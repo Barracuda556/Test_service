@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор внутригоспитальной и 30-дневной летальности при остром коронарном синдроме без подъема сегмента ST (МЛР)</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .form-group label {
+            width: 350px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100px;
+        }
+        select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 120px;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px 0;
+            display: block;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .model-section {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .model-title {
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        .units {
+            color: #666;
+            font-size: 0.9em;
+            margin-left: 5px;
+        }
+        .error {
+            border-color: red !important;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+        .language-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .lang-btn {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .lang-btn:hover {
+            background-color: #e9ecef;
+        }
+        .lang-btn.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-switcher">
+            <button class="lang-btn active" id="ru-btn">ru</button>
+            <button class="lang-btn" id="en-btn">en</button>
+        </div>
+        
+        <!-- Русская версия -->
+        <div id="ru-content">
+            <h1>Калькулятор внутригоспитальной и 30-дневной летальности при остром коронарном синдроме без подъема сегмента ST (МЛР)</h1>
+            
+            <!-- Модель 1 -->
+            <div class="model-section" id="model1-section">
+                <h2 class="model-title">При поступлении</h2>
+                <div class="form-group">
+                    <label for="age">Возраст <span class="units">(лет)</span>:</label>
+                    <input type="number" id="age" name="age" min="18" max="120">
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="killip">Класс Killip:</label>
+                    <select id="killip" name="killip">
+                        <option value="">-- Выберите --</option>
+                        <option value="1">I класс</option>
+                        <option value="2">II класс</option>
+                        <option value="3">III класс</option>
+                        <option value="4">IV класс</option>
+                    </select>
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="sad">САД <span class="units">(мм рт.ст.)</span>:</label>
+                    <input type="number" id="sad" name="sad" min="50" max="250">
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="heartRate">ЧСС <span class="units">(уд/мин)</span>:</label>
+                    <input type="number" id="heartRate" name="heartRate" min="30" max="200">
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="bmi">ИМТ <span class="units">(кг/м²)</span>:</label>
+                    <input type="number" id="bmi" name="bmi" step="0.1" min="10" max="50">
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="communityPneumonia">Внебольничная пневмония:</label>
+                    <select id="communityPneumonia" name="communityPneumonia">
+                        <option value="">-- Выберите --</option>
+                        <option value="0">Нет</option>
+                        <option value="1">Да</option>
+                        <option value="None">Неизвестно</option>
+                    </select>
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="weakness">Симптомы слабости:</label>
+                    <select id="weakness" name="weakness">
+                        <option value="">-- Выберите --</option>
+                        <option value="0">Нет</option>
+                        <option value="1">Да</option>
+                    </select>
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="charlson">Индекс коморбидности Чарлсона <span class="units">(баллы)</span>:</label>
+                    <input type="number" id="charlson" name="charlson" min="0" max="30">
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="familyHistory">Отягощенная наследственность по ССЗ:</label>
+                    <select id="familyHistory" name="familyHistory">
+                        <option value="">-- Выберите --</option>
+                        <option value="0">Нет</option>
+                        <option value="1">Да</option>
+                    </select>
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="dryWheezing">Сухие хрипы:</label>
+                    <select id="dryWheezing" name="dryWheezing">
+                        <option value="">-- Выберите --</option>
+                        <option value="0">Нет</option>
+                        <option value="1">Да</option>
+                    </select>
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="consciousnessLoss">Потеря сознания:</label>
+                    <select id="consciousnessLoss" name="consciousnessLoss">
+                        <option value="">-- Выберите --</option>
+                        <option value="0">Нет</option>
+                        <option value="1">Да</option>
+                    </select>
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <button class="btn" onclick="calculate(1)">Рассчитать</button>
+            </div>
+            
+            <!-- Модель 2 -->
+            <div class="model-section" id="model2-section">
+                <h2 class="model-title">Лабораторные данные</h2>
+                <div class="form-group">
+                    <label for="creatinine">Креатинин <span class="units">(мкмоль/л)</span>:</label>
+                    <input type="number" id="creatinine" name="creatinine" step="0.1" min="20" max="1000">
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="hematocrit">Гематокрит <span class="units">(%)</span>:</label>
+                    <input type="number" id="hematocrit" name="hematocrit" step="0.1" min="10" max="60">
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <button class="btn" onclick="calculate(2)">Рассчитать</button>
+            </div>
+            
+            <!-- Модель 3 -->
+            <div class="model-section" id="model3-section">
+                <h2 class="model-title">Инструментальные данные</h2>
+                <div class="form-group">
+                    <label for="lvDysfunction">Систолическая дисфункция левого желудочка (снижение фракции выброса ≤49%):</label>
+                    <select id="lvDysfunction" name="lvDysfunction">
+                        <option value="">-- Выберите --</option>
+                        <option value="0">Нет</option>
+                        <option value="1">Да</option>
+                    </select>
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <button class="btn" onclick="calculate(3)">Рассчитать</button>
+            </div>
+            
+            <!-- Модель 4 -->
+            <div class="model-section" id="model4-section">
+                <h2 class="model-title">В течение госпитализации</h2>
+                <div class="form-group">
+                    <label for="hospitalPneumonia">Внутрибольничная пневмония:</label>
+                    <select id="hospitalPneumonia" name="hospitalPneumonia">
+                        <option value="">-- Выберите --</option>
+                        <option value="0">Нет</option>
+                        <option value="1">Да</option>
+                    </select>
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <div class="form-group">
+                    <label for="cardiogenicShock">Кардиогенный шок:</label>
+                    <select id="cardiogenicShock" name="cardiogenicShock">
+                        <option value="">-- Выберите --</option>
+                        <option value="0">Нет</option>
+                        <option value="1">Да</option>
+                    </select>
+                    <div class="error-message">Поле обязательно для заполнения</div>
+                </div>
+                <button class="btn" onclick="calculate(4)">Рассчитать</button>
+            </div>
+        </div>
+        
+        <!-- Английская версия (изначально скрыта) -->
+        <div id="en-content" style="display: none;">
+            <h1>Non-ST-segment elevation acute coronary syndrome in-hospital mortality calculator (MLR)</h1>
+            
+            <!-- Модель 1 -->
+            <div class="model-section" id="model1-section-en">
+                <h2 class="model-title">Upon admission</h2>
+                <div class="form-group">
+                    <label for="age-en">Age <span class="units">(years)</span>:</label>
+                    <input type="number" id="age-en" name="age-en" min="18" max="120">
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="killip-en">Acute Heart Failure (AHF):</label>
+                    <select id="killip-en" name="killip-en">
+                        <option value="">-- Select --</option>
+                        <option value="1">I (no AHF)</option>
+                        <option value="2">II (rales and/or jugular vein distention (JVD))</option>
+                        <option value="3">III (pulmonary edema)</option>
+                        <option value="4">IV (cardiogenic shock)</option>
+                    </select>
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="sad-en">Systolic Blood Pressure <span class="units">(mmHg)</span>:</label>
+                    <input type="number" id="sad-en" name="sad-en" min="50" max="250">
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="heartRate-en">Heart Rate <span class="units">(Beats Per Minute (BPM))</span>:</label>
+                    <input type="number" id="heartRate-en" name="heartRate-en" min="30" max="200">
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="bmi-en">Body Mass Index (BMI) <span class="units">(kg/m²)</span>:</label>
+                    <input type="number" id="bmi-en" name="bmi-en" step="0.1" min="10" max="50">
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="communityPneumonia-en">Community-Acquired Pneumonia (CAP):</label>
+                    <select id="communityPneumonia-en" name="communityPneumonia-en">
+                        <option value="">-- Select --</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                        <option value="None">Unknown</option>
+                    </select>
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="weakness-en">Signs of weakness:</label>
+                    <select id="weakness-en" name="weakness-en">
+                        <option value="">-- Select --</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="charlson-en">Charlson Comorbidity Index (CCI) <span class="units">(scores)</span>:</label>
+                    <input type="number" id="charlson-en" name="charlson-en" min="0" max="30">
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="familyHistory-en">Family History of Cardiovascular Disease (FHCD):</label>
+                    <select id="familyHistory-en" name="familyHistory-en">
+                        <option value="">-- Select --</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="dryWheezing-en">Dry crackles:</label>
+                    <select id="dryWheezing-en" name="dryWheezing-en">
+                        <option value="">-- Select --</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="consciousnessLoss-en">Syncope:</label>
+                    <select id="consciousnessLoss-en" name="consciousnessLoss-en">
+                        <option value="">-- Select --</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <div class="error-message">This field is required</div>
+                </div>
+                <button class="btn" onclick="calculate(1, 'en')">Calculate</button>
+            </div>
+            
+            <!-- Модель 2 -->
+            <div class="model-section" id="model2-section-en">
+                <h2 class="model-title">Laboratory data</h2>
+                <div class="form-group">
+                    <label for="creatinine-en">Creatinine <span class="units">(µmol/l)</span>:</label>
+                    <input type="number" id="creatinine-en" name="creatinine-en" step="0.1" min="20" max="1000">
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="hematocrit-en">Hematocrit <span class="units">(%)</span>:</label>
+                    <input type="number" id="hematocrit-en" name="hematocrit-en" step="0.1" min="10" max="60">
+                    <div class="error-message">This field is required</div>
+                </div>
+                <button class="btn" onclick="calculate(2, 'en')">Calculate</button>
+            </div>
+            
+            <!-- Модель 3 -->
+            <div class="model-section" id="model3-section-en">
+                <h2 class="model-title">Instrumental data</h2>
+                <div class="form-group">
+                    <label for="lvDysfunction-en">Left ventricular systolic dysfunction (left ventricular ejection fraction (LVEF) ≤ 49%):</label>
+                    <select id="lvDysfunction-en" name="lvDysfunction-en">
+                        <option value="">-- Select --</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <div class="error-message">This field is required</div>
+                </div>
+                <button class="btn" onclick="calculate(3, 'en')">Calculate</button>
+            </div>
+            
+            <!-- Модель 4 -->
+            <div class="model-section" id="model4-section-en">
+                <h2 class="model-title">During hospitalization</h2>
+                <div class="form-group">
+                    <label for="hospitalPneumonia-en">Hospital-Acquired Pneumonia (HAP):</label>
+                    <select id="hospitalPneumonia-en" name="hospitalPneumonia-en">
+                        <option value="">-- Select --</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <div class="error-message">This field is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="cardiogenicShock-en">Cardiogenic Shock:</label>
+                    <select id="cardiogenicShock-en" name="cardiogenicShock-en">
+                        <option value="">-- Select --</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <div class="error-message">This field is required</div>
+                </div>
+                <button class="btn" onclick="calculate(4, 'en')">Calculate</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функция переключения языка
+        function switchLanguage(lang) {
+            if (lang === 'ru') {
+                document.getElementById('ru-content').style.display = 'block';
+                document.getElementById('en-content').style.display = 'none';
+                document.getElementById('ru-btn').classList.add('active');
+                document.getElementById('en-btn').classList.remove('active');
+                document.title = 'Калькулятор внутригоспитальной и 30-дневной летальности при остром коронарном синдроме без подъема сегмента ST (МЛР)';
+            } else {
+                document.getElementById('ru-content').style.display = 'none';
+                document.getElementById('en-content').style.display = 'block';
+                document.getElementById('en-btn').classList.add('active');
+                document.getElementById('ru-btn').classList.remove('active');
+                document.title = 'Non-ST-segment elevation acute coronary syndrome in-hospital mortality calculator (MLR)';
+            }
+        }
+
+        // Обработчики для кнопок переключения языка
+        document.getElementById('ru-btn').addEventListener('click', function() {
+            switchLanguage('ru');
+        });
+
+        document.getElementById('en-btn').addEventListener('click', function() {
+            switchLanguage('en');
+        });
+
+        function calculate(modelNumber, lang = 'ru') {
+            // Собираем данные для всех требуемых моделей
+            let data = {};
+            let isValid = true;
+
+            // Проверяем и собираем данные для модели 1 (всегда требуется)
+            if (!validateModel(1, lang)) {
+                isValid = false;
+            } else {
+                data.model1 = lang === 'ru' ? getModel1Data() : getModel1Data('en');
+            }
+
+            // Если запрошены модели 2-4, проверяем и их
+            if (modelNumber >= 2) {
+                if (!validateModel(2, lang)) {
+                    isValid = false;
+                } else {
+                    data.model2 = lang === 'ru' ? getModel2Data() : getModel2Data('en');
+                }
+            }
+
+            if (modelNumber >= 3) {
+                if (!validateModel(3, lang)) {
+                    isValid = false;
+                } else {
+                    data.model3 = lang === 'ru' ? getModel3Data() : getModel3Data('en');
+                }
+            }
+
+            if (modelNumber >= 4) {
+                if (!validateModel(4, lang)) {
+                    isValid = false;
+                } else {
+                    data.model4 = lang === 'ru' ? getModel4Data() : getModel4Data('en');
+                }
+            }
+
+            if (!isValid) {
+                alert(lang === 'ru' ? 'Пожалуйста, заполните все обязательные поля для выбранных моделей' : 'Please fill in all required fields for the selected models');
+                return;
+            }
+
+            // Добавляем номер целевой модели
+            data.targetModel = modelNumber;
+            
+            // Отправляем данные на сервер
+            sendData(data, lang);
+        }
+
+        function validateModel(modelNumber, lang = 'ru') {
+            let isValid = true;
+            const fields = getModelFields(modelNumber, lang);
+
+            fields.forEach(field => {
+                const element = document.getElementById(field.id);
+                const errorElement = element.nextElementSibling;
+                
+                // Проверяем, заполнено ли поле
+                if (!element.value || (element.type === 'number' && isNaN(element.value))) {
+                    element.classList.add('error');
+                    errorElement.style.display = 'block';
+                    isValid = false;
+                } else {
+                    element.classList.remove('error');
+                    errorElement.style.display = 'none';
+                }
+            });
+
+            // Дополнительная проверка для моделей 2, 3 и 4
+            if (modelNumber >= 2 && modelNumber <= 4) {
+                const pneumoniaFieldId = lang === 'ru' ? 'communityPneumonia' : 'communityPneumonia-en';
+                const pneumoniaField = document.getElementById(pneumoniaFieldId);
+                const pneumoniaValue = pneumoniaField.value;
+            
+                if (pneumoniaValue === 'None') {
+                    pneumoniaField.classList.add('error');
+                    // Найдем элемент для сообщения об ошибке (он следующий за полем)
+                    const pneumoniaErrorElement = pneumoniaField.nextElementSibling;
+                    pneumoniaErrorElement.textContent = lang === 'ru' 
+                        ? 'Для расчета необходимо указать наличие или отсутствие внебольничной пневмонии' 
+                        : 'Community-acquired pneumonia status must be specified (yes or no)';
+                    pneumoniaErrorElement.style.display = 'block';
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        function getModelFields(modelNumber, lang = 'ru') {
+            const suffix = lang === 'ru' ? '' : '-en';
+            
+            switch(modelNumber) {
+                case 1:
+                    return [
+                        {id: 'age' + suffix, type: 'number'},
+                        {id: 'killip' + suffix, type: 'select'},
+                        {id: 'sad' + suffix, type: 'number'},
+                        {id: 'heartRate' + suffix, type: 'number'},
+                        {id: 'bmi' + suffix, type: 'number'},
+                        {id: 'communityPneumonia' + suffix, type: 'select'},
+                        {id: 'weakness' + suffix, type: 'select'},
+                        {id: 'charlson' + suffix, type: 'number'},
+                        {id: 'familyHistory' + suffix, type: 'select'},
+                        {id: 'dryWheezing' + suffix, type: 'select'},
+                        {id: 'consciousnessLoss' + suffix, type: 'select'}
+                    ];
+                case 2:
+                    return [
+                        {id: 'creatinine' + suffix, type: 'number'},
+                        {id: 'hematocrit' + suffix, type: 'number'}
+                    ];
+                case 3:
+                    return [
+                        {id: 'lvDysfunction' + suffix, type: 'select'}
+                    ];
+                case 4:
+                    return [
+                        {id: 'hospitalPneumonia' + suffix, type: 'select'},
+                        {id: 'cardiogenicShock' + suffix, type: 'select'}
+                    ];
+                default:
+                    return [];
+            }
+        }
+
+        function getModel1Data(lang = 'ru') {
+            const suffix = lang === 'ru' ? '' : '-en';
+            return {
+                age: parseInt(document.getElementById('age' + suffix).value),
+                killip: parseInt(document.getElementById('killip' + suffix).value),
+                sad: parseInt(document.getElementById('sad' + suffix).value),
+                heartRate: parseInt(document.getElementById('heartRate' + suffix).value),
+                bmi: parseFloat(document.getElementById('bmi' + suffix).value),
+                communityPneumonia: parseInt(document.getElementById('communityPneumonia' + suffix).value),
+                weakness: parseInt(document.getElementById('weakness' + suffix).value),
+                charlson: parseInt(document.getElementById('charlson' + suffix).value),
+                familyHistory: parseInt(document.getElementById('familyHistory' + suffix).value),
+                dryWheezing: parseInt(document.getElementById('dryWheezing' + suffix).value),
+                consciousnessLoss: parseInt(document.getElementById('consciousnessLoss' + suffix).value)
+            };
+        }
+
+        function getModel2Data(lang = 'ru') {
+            const suffix = lang === 'ru' ? '' : '-en';
+            return {
+                creatinine: parseFloat(document.getElementById('creatinine' + suffix).value),
+                hematocrit: parseFloat(document.getElementById('hematocrit' + suffix).value)
+            };
+        }
+
+        function getModel3Data(lang = 'ru') {
+            const suffix = lang === 'ru' ? '' : '-en';
+            return {
+                lvDysfunction: parseInt(document.getElementById('lvDysfunction' + suffix).value)
+            };
+        }
+
+        function getModel4Data(lang = 'ru') {
+            const suffix = lang === 'ru' ? '' : '-en';
+            return {
+                hospitalPneumonia: parseInt(document.getElementById('hospitalPneumonia' + suffix).value),
+                cardiogenicShock: parseInt(document.getElementById('cardiogenicShock' + suffix).value)
+            };
+        }
+
+        function sendData(data, lang = 'ru') {
+            // Подготавливаем данные для отправки в формате, который ожидает бэкенд
+            let features = [];
+            
+            // Всегда добавляем данные модели 1 (11 параметров)
+            features.push(
+                data.model1.age,
+                data.model1.killip,
+                data.model1.sad,
+                data.model1.heartRate,
+                data.model1.bmi,
+                data.model1.communityPneumonia,
+                data.model1.weakness,
+                data.model1.charlson,
+                data.model1.familyHistory,
+                data.model1.dryWheezing,
+                data.model1.consciousnessLoss
+            );
+            
+            // Если есть данные модели 2, добавляем 2 параметра (итого 13)
+            if (data.model2) {
+                features.push(
+                    data.model2.creatinine,
+                    data.model2.hematocrit
+                );
+            }
+            
+            // Если есть данные модели 3, добавляем 1 параметр (итого 14)
+            if (data.model3) {
+                features.push(data.model3.lvDysfunction);
+            }
+            
+            // Если есть данные модели 4, добавляем 2 параметра (итого 16)
+            if (data.model4) {
+                features.push(
+                    data.model4.hospitalPneumonia,
+                    data.model4.cardiogenicShock
+                );
+            }
+            
+            // Формируем объект для отправки
+            const requestData = {
+                features: features
+            };
+            
+            const apiUrl = 'https://predict-ihm.onrender.com/predict';
+
+            // Отправляем данные на сервер
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(lang === 'ru' ? 'Ошибка сети или сервера' : 'Network or server error');
+                }
+                return response.json();
+            })
+            .then(result => {
+                // Форматируем результат для отображения
+                const probabilityPercent = (result.probability * 100).toFixed(2);
+                let message;
+                
+                if (lang === 'ru') {
+                    message = `Вероятность летального исхода: ${probabilityPercent}%\n` +
+                              `Уровень риска: ${result.risk}`;
+                } else {
+                    // Переводим русские категории риска на английский
+                    let riskEn;
+                    if (result.risk === 'Высокий риск') riskEn = 'High risk';
+                    else if (result.risk === 'Средний риск') riskEn = 'Medium risk';
+                    else riskEn = 'Low risk';
+                    
+                    message = `Mortality probability: ${probabilityPercent}%\n` +
+                              `Risk level: ${riskEn}`;
+                }
+                
+                alert(message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(lang === 'ru' 
+                    ? 'Произошла ошибка при расчете. Пожалуйста, попробуйте позже.'
+                    : 'An error occurred during calculation. Please try again later.');
+            });
+        }
+
+        // Добавляем обработчики для сброса ошибок при вводе
+        document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('input', function() {
+                if (this.classList.contains('error')) {
+                    this.classList.remove('error');
+                    const errorElement = this.nextElementSibling;
+                    if (errorElement && errorElement.classList.contains('error-message')) {
+                        errorElement.style.display = 'none';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
