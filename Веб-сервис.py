@@ -37,11 +37,11 @@ scaler_3 = loaded_objects['scaler_3']
 scaler_4 = loaded_objects['scaler_4']
 scaler_5 = loaded_objects['scaler_5']
 
-threshold_1 = 0.08
-threshold_2 = 0.087
-threshold_3 = 0.098
-threshold_4 = 0.101
-threshold_5 = 0.11
+threshold_1 = 0.075
+threshold_2 = 0.075
+threshold_3 = 0.1
+threshold_4 = 0.1
+threshold_5 = 0.08
 
 app = Flask(__name__)
 
