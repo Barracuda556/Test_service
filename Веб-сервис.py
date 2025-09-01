@@ -6,7 +6,7 @@ import requests
 import io
 
 # Базовый URL репозитория
-base_url = "https://github.com/Barracuda556/predict_IHM/raw/main/"
+base_url = "https://github.com/Barracuda556/Test_service/raw/main/"
 
 # Список имен файлов
 model_files = [
